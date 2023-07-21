@@ -29,9 +29,9 @@ const ADMIN_CORS =
 const STORE_CORS = process.env.STORE_CORS || "http://localhost:8000";
 
 const DATABASE_URL =
-  process.env.DATABASE_URL || "postgres://localhost/medusa-store";
+  process.env.DATABASE_URL || "postgres://zvampqtevcrvys:b7a32b813d1ff5c7088433098031c37209403d138d61ad6093bd94b80244212f@ec2-52-5-167-89.compute-1.amazonaws.com:5432/dfmvamqto7c7bq";
 
-const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
+const REDIS_URL = process.env.REDIS_URL || "redis://default:4IPgS0HMMszFfshorTgWcId4Q2o5q0Y39vmvD1xR8vbcAyaRq020zJsTlrgGpJcJ@vvx2h3.stackhero-network.com:6379";
 
 const plugins = [
   `medusa-fulfillment-manual`,
@@ -55,18 +55,18 @@ const plugins = [
 ];
 
 const modules = {
-  /*eventBus: {
-    resolve: "@medusajs/event-bus-redis",
-    options: {
-      redisUrl: REDIS_URL
-    }
-  },
-  cacheService: {
-    resolve: "@medusajs/cache-redis",
-    options: {
-      redisUrl: REDIS_URL
-    }
-  },*/
+    eventBus: {
+        resolve: "@medusajs/event-bus-redis",
+        options: {
+            redisUrl: REDIS_URL,
+        },
+    },
+    cacheService: {
+        resolve: "@medusajs/cache-redis",
+        options: {
+            redisUrl: REDIS_URL,
+        },
+    },
 };
 
 /** @type {import('@medusajs/medusa').ConfigModule["projectConfig"]} */
@@ -82,7 +82,14 @@ const projectConfig = {
 
 /** @type {import('@medusajs/medusa').ConfigModule} */
 module.exports = {
-  projectConfig,
-  plugins,
-  modules,
-};
+    projectConfig: {
+        redis_url: REDIS_URL,
+        database_url: DATABASE_URL,
+        database_type: "postgres",
+        store_cors: STORE_CORS,
+        admin_cors: ADMIN_CORS,
+        database_extra: process.env.NODE_ENV !== "development" ? { ssl: { rejectUnauthorized: false } } : {},
+    },
+    plugins,
+    modules,
+}
